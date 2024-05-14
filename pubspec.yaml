@@ -14,8 +14,11 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.6
-  carousel_slider: ^4.2.1
+
   http: ^1.2.1
+
+  carousel_slider: ^4.2.1
+  shadow_overlay: ^1.0.5
 
 dev_dependencies:
   flutter_test:

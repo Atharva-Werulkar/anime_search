@@ -24,7 +24,7 @@ class Anime {
           : json['title'].toString(),
       url: json['url'].toString(),
       trailerUrl: json['trailer']['url'].toString(),
-      trailerThumbnail: json['images']['jpg']['large_image_url'].toString(),
+      trailerThumbnail: json['images']['jpg']['image_url'].toString(),
       synopsis: json['synopsis'].toString(),
     );
   }

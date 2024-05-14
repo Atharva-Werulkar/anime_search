@@ -163,6 +163,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.0"
+  shadow_overlay:
+    dependency: "direct main"
+    description:
+      name: shadow_overlay
+      sha256: "516a117fab493fb34d8a34a2b29436ea89619c1b8a1f737a71f1f4f4841c8dd3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -250,3 +258,4 @@ packages:
     version: "0.5.1"
 sdks:
   dart: ">=3.3.4 <4.0.0"
+  flutter: ">=1.17.0"

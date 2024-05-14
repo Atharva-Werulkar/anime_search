@@ -1,6 +1,7 @@
 import 'package:anime_search/backend/backend.dart';
 import 'package:anime_search/model/anime.dart';
 import 'package:anime_search/utiles/colors.dart';
+import 'package:anime_search/widgets/custom_anime_card.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -131,47 +132,18 @@ class _HomePageState extends State<HomePage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return SizedBox(
-                      height: 200.0,
+                      height: MediaQuery.of(context).size.height * 0.35,
                       child: ListView.builder(
                         physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          return Card(
-                            color: secondaryColor,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Image.network(
-                                    snapshot.data![index].trailerThumbnail,
-                                    fit: BoxFit.cover,
-                                    height: 100.0,
-                                  ),
-                                  const SizedBox(height: 10.0),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data![index].title,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: textColor,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10.0),
-                                  Text(
-                                    'Release Date: ${snapshot.data![index].title}',
-                                    style: const TextStyle(
-                                      fontSize: 12.0,
-                                      color: textColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                          return AnimeCard(
+                            trailerUrl: snapshot.data![index].trailerUrl,
+                            title: snapshot.data![index].title,
+                            thumbnailUrl:
+                                snapshot.data![index].trailerThumbnail,
+                            url: snapshot.data![index].url,
                           );
                         },
                       ),

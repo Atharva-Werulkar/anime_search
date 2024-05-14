@@ -49,9 +49,10 @@ class Backend {
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body)['data'];
+      log('Random Anime Response :  $body ');
       List<Anime> animeList =
           body.map((dynamic item) => Anime.fromMap(item)).toList();
-      log('Random Anime List  :  $animeList ');
+      log('Random Anime List  : $animeList ');
       return animeList;
     } else {
       throw Exception('Failed to load random anime');
