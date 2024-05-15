@@ -17,7 +17,7 @@ class Backend {
       List<Anime> animeList =
           body.map((dynamic item) => Anime.fromMap(item)).toList();
 
-      log(' Searched Anime List :  $animeList ');
+      log(' Searched Anime List Fetched');
 
       return animeList;
     } else {
@@ -35,7 +35,7 @@ class Backend {
       List<dynamic> body = jsonDecode(response.body)['data'];
       List<Anime> animeList =
           body.map((dynamic item) => Anime.fromMap(item)).toList();
-      log('Top Anime List :  $animeList ');
+      log('Top Anime List Fetched ');
       return animeList;
     } else {
       throw Exception('Failed to load top anime');
@@ -51,7 +51,7 @@ class Backend {
       List<dynamic> body = jsonDecode(response.body)['data'];
       List<Anime> animeList =
           body.map((dynamic item) => Anime.fromMap(item)).toList();
-      log('Upcoming Anime List :  $animeList ');
+      log('Upcoming Anime List Fetched ');
       return animeList;
     } else {
       throw Exception('Failed to load upcoming anime');
