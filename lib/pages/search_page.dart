@@ -16,6 +16,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+    _searchResults = Backend.getTopAnime();
 
     _searchController.addListener(_onSearchChanged);
   }
@@ -30,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
   void _onSearchChanged() {
     setState(() {
       if (_searchController.text.isEmpty) {
-        _searchResults = Backend.getRandomAnime();
+        _searchResults = Backend.getTopAnime();
       } else {
         _searchResults = Backend.searchAnime(_searchController.text);
       }

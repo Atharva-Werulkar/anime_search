@@ -46,7 +46,8 @@
 //     );
 //
 // }
-import 'package:anime_search/utiles/colors.dart';
+
+import 'package:anime_search/utiles/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shadow_overlay/shadow_overlay.dart';
@@ -67,78 +68,49 @@ class AnimeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        ShadowOverlay(
-          shadowColor: Colors.black,
-          shadowWidth: 900,
-          shadowHeight: 150,
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.3,
-            width: MediaQuery.of(context).size.width * 0.4,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: NetworkImage(thumbnailUrl),
-                fit: BoxFit.fill,
+    return SizedBox(
+      width: getDeviceHeight(context) * 0.2,
+      child: Stack(
+        children: [
+          ShadowOverlay(
+            shadowColor: Colors.black,
+            shadowWidth: MediaQuery.of(context).size.width,
+            shadowHeight: 150,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.3,
+              width: MediaQuery.of(context).size.width * 0.4,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: NetworkImage(thumbnailUrl),
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
+              // Anime Rating At top left
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  title,
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
-            // Anime Rating At top left
           ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 15.0,
-              fontWeight: FontWeight.bold,
-              color: textColor,
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
-
-    // Container(
-    //   decoration: BoxDecoration(
-    //     color: secondaryColor,
-    //     borderRadius: BorderRadius.circular(10.0),
-    //   ),
-    //   child: Stack(
-    //     children: [
-    //       ShadowOverlay(
-    //         shadowColor: Colors.black,
-    //         shadowWidth: 900,
-    //         shadowHeight: 150,
-    //         child: Padding(
-    //           padding: const EdgeInsets.all(5.0),
-    //           child: Container(
-    //             decoration: BoxDecoration(
-    //               borderRadius: BorderRadius.circular(10.0),
-    //             ),
-    //             child: Image.network(
-    //               thumbnailUrl,
-    //               fit: BoxFit.cover,
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //       Align(
-    //         alignment: Alignment.bottomCenter,
-    //         child: Text(
-    //           title,
-    //           textAlign: TextAlign.center,
-    //           style: const TextStyle(
-    //             fontSize: 15.0,
-    //             fontWeight: FontWeight.bold,
-    //             color: textColor,
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

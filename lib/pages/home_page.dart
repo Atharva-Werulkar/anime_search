@@ -1,7 +1,10 @@
 import 'package:anime_search/backend/backend.dart';
 import 'package:anime_search/model/anime.dart';
 import 'package:anime_search/utiles/colors.dart';
+import 'package:anime_search/utiles/constants.dart';
 import 'package:anime_search/widgets/custom_anime_card.dart';
+import 'package:anime_search/widgets/custom_carousel_slider.dart';
+import 'package:anime_search/widgets/custom_homepage_card.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -27,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
           child: Column(
@@ -52,57 +56,7 @@ class _HomePageState extends State<HomePage> {
                 future: _topAnime,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return CarouselSlider(
-                      options: CarouselOptions(
-                        height: 200.0,
-                        autoPlay: true,
-                        enlargeCenterPage: true,
-                      ),
-                      items: snapshot.data!.map((anime) {
-                        return Builder(
-                          builder: (BuildContext context) {
-                            return Container(
-                              width: MediaQuery.of(context).size.width,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 5.0),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.circular(15.0),
-                                //blur background image
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black26,
-                                    offset: Offset(0.0, 2.0),
-                                    blurRadius: 6.0,
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Image.network(
-                                    anime.trailerThumbnail,
-                                    fit: BoxFit.cover,
-                                    height: 150.0,
-                                  ),
-                                  const SizedBox(height: 10.0),
-                                  Flexible(
-                                    child: Text(
-                                      anime.title,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: textColor,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      }).toList(),
-                    );
+                    return AnimeCarousel(animeList: snapshot.data!);
                   } else if (snapshot.hasError) {
                     return Text('${snapshot.error}');
                   }
@@ -132,18 +86,22 @@ class _HomePageState extends State<HomePage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.35,
+                      height: getDeviceHeight(context) * 0.3,
                       child: ListView.builder(
                         physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          return AnimeCard(
-                            trailerUrl: snapshot.data![index].trailerUrl,
-                            title: snapshot.data![index].title,
-                            thumbnailUrl:
-                                snapshot.data![index].trailerThumbnail,
-                            url: snapshot.data![index].url,
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: HomePageCard(
+                              trailerUrl: snapshot.data![index].trailerUrl,
+                              title: snapshot.data![index].title,
+                              thumbnailUrl:
+                                  snapshot.data![index].trailerThumbnail,
+                              url: snapshot.data![index].url,
+                            ),
                           );
                         },
                       ),
@@ -178,46 +136,21 @@ class _HomePageState extends State<HomePage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return SizedBox(
-                      height: 200.0,
+                      height: getDeviceHeight(context) * 0.3,
                       child: ListView.builder(
                         physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          return Card(
-                            color: secondaryColor,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Image.network(
-                                    snapshot.data![index].trailerThumbnail,
-                                    fit: BoxFit.cover,
-                                    height: 100.0,
-                                  ),
-                                  const SizedBox(height: 10.0),
-                                  Flexible(
-                                    child: Text(
-                                      snapshot.data![index].title,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: textColor,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10.0),
-                                  Text(
-                                    'Release Date: ${snapshot.data![index].title}',
-                                    style: const TextStyle(
-                                      fontSize: 12.0,
-                                      color: textColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: HomePageCard(
+                              trailerUrl: snapshot.data![index].trailerUrl,
+                              title: snapshot.data![index].title,
+                              thumbnailUrl:
+                                  snapshot.data![index].trailerThumbnail,
+                              url: snapshot.data![index].url,
                             ),
                           );
                         },
