@@ -7,6 +7,7 @@ import 'package:anime_search/widgets/custom_homepage_card.dart';
 import 'package:anime_search/widgets/custom_shimmer_card.dart';
 import 'package:anime_search/widgets/custom_shimmer_carousel.dart';
 import 'package:flutter/material.dart';
+import 'package:anime_search/pages/detail_page.dart'; // Import the DetailPage
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -94,15 +95,27 @@ class _HomePageState extends State<HomePage> {
                         scrollDirection: Axis.horizontal,
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: HomePageCard(
-                              trailerUrl: snapshot.data![index].trailerUrl,
-                              title: snapshot.data![index].title,
-                              thumbnailUrl:
-                                  snapshot.data![index].trailerThumbnail,
-                              url: snapshot.data![index].url,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DetailPage(anime: snapshot.data![index]),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: HomePageCard(
+                                trailerUrl: snapshot.data![index].trailerUrl ??
+                                    'Not Available',
+                                title: snapshot.data![index].title,
+                                thumbnailUrl:
+                                    snapshot.data![index].trailerThumbnail,
+                                url: snapshot.data![index].url,
+                              ),
                             ),
                           );
                         },
@@ -157,15 +170,27 @@ class _HomePageState extends State<HomePage> {
                         scrollDirection: Axis.horizontal,
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: HomePageCard(
-                              trailerUrl: snapshot.data![index].trailerUrl,
-                              title: snapshot.data![index].title,
-                              thumbnailUrl:
-                                  snapshot.data![index].trailerThumbnail,
-                              url: snapshot.data![index].url,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DetailPage(anime: snapshot.data![index]),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: HomePageCard(
+                                trailerUrl: snapshot.data![index].trailerUrl ??
+                                    'Not Available',
+                                title: snapshot.data![index].title,
+                                thumbnailUrl:
+                                    snapshot.data![index].trailerThumbnail,
+                                url: snapshot.data![index].url,
+                              ),
                             ),
                           );
                         },

@@ -110,7 +110,8 @@ class SearchPageState extends State<SearchPage> {
                             thumbnailUrl:
                                 snapshot.data![index].trailerThumbnail,
                             url: snapshot.data![index].url,
-                            trailerUrl: snapshot.data![index].trailerUrl,
+                            trailerUrl: snapshot.data![index].trailerUrl ??
+                                'Not Available',
                           ),
                         );
                       },
