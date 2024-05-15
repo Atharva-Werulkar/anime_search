@@ -1,55 +1,5 @@
-// import 'package:flutter/material.dart';
-//
-// class AnimeCard extends StatelessWidget {
-//   const AnimeCard({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       margin: const EdgeInsets.all(8.0),
-//       padding: const EdgeInsets.all(8.0),
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(10.0),
-//       ),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: <Widget>[
-//           Text(
-//             snapshot.data![index].title,
-//             style: const TextStyle(
-//               fontSize: 18.0,
-//               fontWeight: FontWeight.bold,
-//             ),
-//           ),
-//           const SizedBox(height: 8.0),
-//           Image.network(
-//               snapshot.data![index].trailerThumbnail),
-//           const SizedBox(height: 8.0),
-//           Text(
-//             'URL: ${snapshot.data![index].url}',
-//             style: const TextStyle(
-//               fontSize: 14.0,
-//               color: Colors.blue,
-//             ),
-//           ),
-//           const SizedBox(height: 8.0),
-//           Text(
-//             'Trailer URL: ${snapshot.data![index].trailerUrl}',
-//             style: const TextStyle(
-//               fontSize: 14.0,
-//               color: Colors.blue,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//
-// }
-
-import 'package:anime_search/utiles/constants.dart';
+import 'package:anime_search/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shadow_overlay/shadow_overlay.dart';
 
 class AnimeCard extends StatelessWidget {
@@ -59,12 +9,12 @@ class AnimeCard extends StatelessWidget {
   final String trailerUrl;
 
   const AnimeCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.thumbnailUrl,
     required this.url,
     required this.trailerUrl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

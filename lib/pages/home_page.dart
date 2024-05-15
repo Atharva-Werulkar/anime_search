@@ -1,14 +1,16 @@
 import 'package:anime_search/backend/backend.dart';
 import 'package:anime_search/model/anime.dart';
-import 'package:anime_search/utiles/colors.dart';
-import 'package:anime_search/utiles/constants.dart';
-import 'package:anime_search/widgets/custom_anime_card.dart';
+import 'package:anime_search/utils/colors.dart';
+import 'package:anime_search/utils/constants.dart';
 import 'package:anime_search/widgets/custom_carousel_slider.dart';
 import 'package:anime_search/widgets/custom_homepage_card.dart';
+import 'package:anime_search/widgets/custom_shimmer_card.dart';
+import 'package:anime_search/widgets/custom_shimmer_carousel.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -16,14 +18,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Future<List<Anime>>? _topAnime;
   Future<List<Anime>>? _upcomingAnime;
-  // Future<List<Anime>>? _popularAnime;
 
   @override
   void initState() {
     super.initState();
     _topAnime = Backend.getTopAnime();
     _upcomingAnime = Backend.getUpcomingAnime();
-    // _popularAnime = Backend.getAnimeRecommendations();
   }
 
   @override
@@ -49,24 +49,25 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 15.0),
 
               // Carousel Slider
               FutureBuilder<List<Anime>>(
                 future: _topAnime,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return AnimeCarousel(animeList: snapshot.data!);
+                    return SizedBox(
+                        height: getDeviceHeight(context) * 0.25,
+                        width: double.infinity,
+                        child: AnimeCarousel(animeList: snapshot.data!));
                   } else if (snapshot.hasError) {
                     return Text('${snapshot.error}');
                   }
-
-                  // By default, show a loading spinner.
-                  return CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  );
+                  // By default, show a shimmer loader.
+                  return const ShimmerCarousel();
                 },
               ),
+              //=====Popular anime =====//
               const SizedBox(height: 10.0),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -80,6 +81,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const SizedBox(height: 10.0),
+
               //list of popular anime
               FutureBuilder<List<Anime>>(
                 future: _topAnime,
@@ -110,14 +112,25 @@ class _HomePageState extends State<HomePage> {
                     return Text('${snapshot.error}');
                   }
 
-                  // By default, show a loading spinner.
-                  return CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  // By default, show a shimmer loader.
+                  return SizedBox(
+                    height: getDeviceHeight(context) * 0.3,
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 10,
+                      itemBuilder: (context, index) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: ShimmerCard(),
+                        );
+                      },
+                    ),
                   );
                 },
               ),
 
-              //Popular anime list
+              //=====Top Upcoming anime =====//
               const SizedBox(height: 10.0),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -131,6 +144,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const SizedBox(height: 10.0),
+
+              //list of upcoming anime
               FutureBuilder<List<Anime>>(
                 future: _upcomingAnime,
                 builder: (context, snapshot) {
@@ -160,9 +175,20 @@ class _HomePageState extends State<HomePage> {
                     return Text('${snapshot.error}');
                   }
 
-                  // By default, show a loading spinner.
-                  return CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  // By default, show a shimmer loader.
+                  return SizedBox(
+                    height: getDeviceHeight(context) * 0.3,
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 10,
+                      itemBuilder: (context, index) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: ShimmerCard(),
+                        );
+                      },
+                    ),
                   );
                 },
               ),

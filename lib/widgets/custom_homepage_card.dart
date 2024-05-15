@@ -1,4 +1,4 @@
-import 'package:anime_search/utiles/constants.dart';
+import 'package:anime_search/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class HomePageCard extends StatelessWidget {
@@ -8,12 +8,12 @@ class HomePageCard extends StatelessWidget {
   final String trailerUrl;
 
   const HomePageCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.thumbnailUrl,
     required this.url,
     required this.trailerUrl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class HomePageCard extends StatelessWidget {
               getDeviceHeight(context) * 0.06, // Adjust this value as needed
           decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.5),
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(10),
               bottomRight: Radius.circular(10),
             ),

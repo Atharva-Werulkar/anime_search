@@ -1,6 +1,6 @@
 import 'package:anime_search/pages/home_page.dart';
 import 'package:anime_search/pages/search_page.dart';
-import 'package:anime_search/utiles/colors.dart';
+import 'package:anime_search/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: primaryColor,
       body: PageView(
         controller: _pageController,
-        children: <Widget>[
+        children: const <Widget>[
           HomePage(),
           SearchPage(),
         ],

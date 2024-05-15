@@ -1,4 +1,4 @@
-import 'package:anime_search/utiles/constants.dart';
+import 'package:anime_search/utils/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -19,6 +19,7 @@ class AnimeCarousel extends StatelessWidget {
     return CarouselSlider(
       options: CarouselOptions(
         height: getDeviceHeight(context) * 0.3,
+        aspectRatio: 2.0,
         scrollPhysics: const BouncingScrollPhysics(),
         autoPlay: true,
         enlargeCenterPage: true,
@@ -33,7 +34,6 @@ class AnimeCarousel extends StatelessWidget {
                   shadowHeight: 150,
                   shadowWidth: 900,
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
                     height: getDeviceHeight(context) * 0.3,
                     decoration: BoxDecoration(
                       image: DecorationImage(

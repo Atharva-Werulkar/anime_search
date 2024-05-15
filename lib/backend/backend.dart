@@ -42,23 +42,6 @@ class Backend {
     }
   }
 
-  //get random anime
-  static Future<List<Anime>> getRandomAnime() async {
-    final response =
-        await http.get(Uri.parse('https://api.jikan.moe/v4/random/anime'));
-
-    if (response.statusCode == 200) {
-      List<dynamic> body = jsonDecode(response.body)['data'];
-      log('Random Anime Response :  $body ');
-      List<Anime> animeList =
-          body.map((dynamic item) => Anime.fromMap(item)).toList();
-      log('Random Anime List  : $animeList ');
-      return animeList;
-    } else {
-      throw Exception('Failed to load random anime');
-    }
-  }
-
   //get upcoming anime season
   static Future<List<Anime>> getUpcomingAnime() async {
     final response =

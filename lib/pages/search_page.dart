@@ -1,22 +1,25 @@
 import 'package:anime_search/backend/backend.dart';
 import 'package:anime_search/model/anime.dart';
-import 'package:anime_search/utiles/colors.dart';
+import 'package:anime_search/utils/colors.dart';
 import 'package:anime_search/widgets/custom_anime_card.dart';
+import 'package:anime_search/widgets/custom_shimmer_card.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
+
   @override
-  _SearchPageState createState() => _SearchPageState();
+  SearchPageState createState() => SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   Future<List<Anime>>? _searchResults;
 
   @override
   void initState() {
     super.initState();
-    _searchResults = Backend.getTopAnime();
+    _searchResults = Backend.getUpcomingAnime();
 
     _searchController.addListener(_onSearchChanged);
   }
@@ -31,7 +34,7 @@ class _SearchPageState extends State<SearchPage> {
   void _onSearchChanged() {
     setState(() {
       if (_searchController.text.isEmpty) {
-        _searchResults = Backend.getTopAnime();
+        _searchResults = Backend.getUpcomingAnime();
       } else {
         _searchResults = Backend.searchAnime(_searchController.text);
       }
@@ -69,95 +72,32 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
               const SizedBox(height: 20.0),
-              // FutureBuilder
-              // FutureBuilder<List<Anime>>(
-              //   future: _searchResults,
-              //   builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return const Center(
-              //         child: CircularProgressIndicator(
-              //           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              //         ),
-              //       );
-              //     } else if (snapshot.hasData) {
-              //       return ListView.builder(
-              //         physics: const NeverScrollableScrollPhysics(),
-              //         shrinkWrap: true,
-              //         itemCount: snapshot.data!.length,
-              //         itemBuilder: (context, index) {
-              //           return Container(
-              //             margin: const EdgeInsets.all(8.0),
-              //             padding: const EdgeInsets.all(8.0),
-              //             decoration: BoxDecoration(
-              //               color: Colors.white,
-              //               borderRadius: BorderRadius.circular(10.0),
-              //             ),
-              //             child: Column(
-              //               crossAxisAlignment: CrossAxisAlignment.start,
-              //               children: <Widget>[
-              //                 Text(
-              //                   snapshot.data![index].title,
-              //                   style: const TextStyle(
-              //                     fontSize: 18.0,
-              //                     fontWeight: FontWeight.bold,
-              //                   ),
-              //                 ),
-              //                 const SizedBox(height: 8.0),
-              //                 Image.network(
-              //                     snapshot.data![index].trailerThumbnail),
-              //                 const SizedBox(height: 8.0),
-              //                 Text(
-              //                   'URL: ${snapshot.data![index].url}',
-              //                   style: const TextStyle(
-              //                     fontSize: 14.0,
-              //                     color: Colors.blue,
-              //                   ),
-              //                 ),
-              //                 const SizedBox(height: 8.0),
-              //                 Text(
-              //                   'Trailer URL: ${snapshot.data![index].trailerUrl}',
-              //                   style: const TextStyle(
-              //                     fontSize: 14.0,
-              //                     color: Colors.blue,
-              //                   ),
-              //                 ),
-              //               ],
-              //             ),
-              //           );
-              //         },
-              //       );
-              //     } else if (snapshot.hasError) {
-              //       return Text('${snapshot.error}');
-              //     }
-              //
-              //     // By default, show a text message
-              //
-              //     return const Center(
-              //       child: Text(
-              //         'Search for an anime',
-              //         style: TextStyle(
-              //           color: secondaryIconColor,
-              //           fontSize: 18.0,
-              //         ),
-              //       ),
-              //     );
-              //   },
-              // )
-
               FutureBuilder<List<Anime>>(
                 future: _searchResults,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    return GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, // Number of grids
+                        childAspectRatio: 2 / 3, // Adjust this value as needed
                       ),
+                      itemCount: 10,
+                      itemBuilder: (context, index) {
+                        return const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: ShimmerCard(),
+                        );
+                      },
                     );
                   } else if (snapshot.hasData) {
                     return GridView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2, // Number of grids
                         childAspectRatio: 2 / 3, // Adjust this value as needed
                       ),
@@ -180,14 +120,18 @@ class _SearchPageState extends State<SearchPage> {
                   }
 
                   // By default, show a text message
-                  return const Center(
-                    child: Text(
-                      'Search for an anime',
-                      style: TextStyle(
-                        color: secondaryIconColor,
-                        fontSize: 18.0,
-                      ),
+                  return GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // Number of grids
+                      childAspectRatio: 2 / 3, // Adjust this value as needed
                     ),
+                    itemCount: 10,
+                    itemBuilder: (context, index) {
+                      return const ShimmerCard();
+                    },
                   );
                 },
               )
