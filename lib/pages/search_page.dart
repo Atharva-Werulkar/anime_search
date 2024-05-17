@@ -1,5 +1,6 @@
 import 'package:anime_search/backend/backend.dart';
 import 'package:anime_search/model/anime.dart';
+import 'package:anime_search/pages/detail_page.dart';
 import 'package:anime_search/utils/colors.dart';
 import 'package:anime_search/widgets/custom_anime_card.dart';
 import 'package:anime_search/widgets/custom_shimmer_card.dart';
@@ -84,11 +85,29 @@ class SearchPageState extends State<SearchPage> {
                         crossAxisCount: 2, // Number of grids
                         childAspectRatio: 2 / 3, // Adjust this value as needed
                       ),
-                      itemCount: 10,
+                      itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
-                        return const Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: ShimmerCard(),
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DetailPage(anime: snapshot.data![index]),
+                                ),
+                              );
+                            },
+                            child: AnimeCard(
+                              title: snapshot.data![index].title,
+                              thumbnailUrl:
+                                  snapshot.data![index].trailerThumbnail,
+                              url: snapshot.data![index].url,
+                              trailerUrl: snapshot.data![index].trailerUrl ??
+                                  'Not Available',
+                            ),
+                          ),
                         );
                       },
                     );
@@ -105,13 +124,24 @@ class SearchPageState extends State<SearchPage> {
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.all(10.0),
-                          child: AnimeCard(
-                            title: snapshot.data![index].title,
-                            thumbnailUrl:
-                                snapshot.data![index].trailerThumbnail,
-                            url: snapshot.data![index].url,
-                            trailerUrl: snapshot.data![index].trailerUrl ??
-                                'Not Available',
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DetailPage(anime: snapshot.data![index]),
+                                ),
+                              );
+                            },
+                            child: AnimeCard(
+                              title: snapshot.data![index].title,
+                              thumbnailUrl:
+                                  snapshot.data![index].trailerThumbnail,
+                              url: snapshot.data![index].url,
+                              trailerUrl: snapshot.data![index].trailerUrl ??
+                                  'Not Available',
+                            ),
                           ),
                         );
                       },

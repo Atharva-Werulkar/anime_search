@@ -4,14 +4,17 @@ import 'package:anime_search/utils/colors.dart';
 import 'package:anime_search/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shadow_overlay/shadow_overlay.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ImageBanner extends StatelessWidget {
   final String trailerThumbnail;
   final String title;
+  final String? url;
 
   const ImageBanner({
     required this.trailerThumbnail,
     required this.title,
+    required this.url,
     super.key,
   });
 
@@ -84,7 +87,12 @@ class ImageBanner extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      // ignore: deprecated_member_use
+                      launch(
+                        url!,
+                      );
+                    },
                     icon: const Icon(Icons.play_arrow, color: textColor),
                     label: const Text('Play Trailer',
                         style: TextStyle(color: textColor)),

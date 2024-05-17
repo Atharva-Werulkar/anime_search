@@ -3,7 +3,6 @@ import 'package:anime_search/utils/colors.dart';
 import 'package:anime_search/widgets/custom_image_banner.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatefulWidget {
   final Anime anime;
@@ -21,6 +20,19 @@ class _DetailPageState extends State<DetailPage> {
     List<String> paragraphs = widget.anime.synopsis.split('\n');
     String firstParagraph = paragraphs.first;
     String restOfSynopsis = paragraphs.skip(1).join('\n');
+    String rating =
+        widget.anime.rating == 'null' ? 'N/A' : widget.anime.rating + '/10';
+
+    String episodes = widget.anime.episodes == 'null'
+        ? 'N/A'
+        : widget.anime.episodes + ' episodes';
+    String startDate = widget.anime.startDate == 'null-null-null'
+        ? 'N/A'
+        : widget.anime.startDate;
+
+    String endDate = widget.anime.endDate == 'null-null-null'
+        ? 'N/A'
+        : widget.anime.startDate;
 
     return SafeArea(
       child: Scaffold(
@@ -35,6 +47,7 @@ class _DetailPageState extends State<DetailPage> {
               ImageBanner(
                 trailerThumbnail: widget.anime.trailerThumbnail,
                 title: widget.anime.title,
+                url: widget.anime.trailerUrl,
               ),
 
               const Padding(
@@ -84,40 +97,73 @@ class _DetailPageState extends State<DetailPage> {
               ),
 
               Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0, vertical: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
+                        text: const TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Rating:',
+                            )
+                          ],
+                        ),
+                      ),
+                      Text('${rating}',
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            color: textColor,
+                          )),
+                    ],
+                  )),
+              const SizedBox(height: 10.0),
+              Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 15.0, vertical: 10.0),
-                child: Text(
-                  'Rating: ${widget.anime.rating}',
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: textColor,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: const TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Episodes:',
+                          )
+                        ],
+                      ),
+                    ),
+                    Text(episodes,
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          color: textColor,
+                        )),
+                  ],
                 ),
               ),
               const SizedBox(height: 10.0),
               Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 15.0, vertical: 10.0),
-                child: Text(
-                  'Episodes: ${widget.anime.episodes}',
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    color: textColor,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0, vertical: 10.0),
-                child: Text(
-                  'Aired: '
-                  '${widget.anime.status}',
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    color: textColor,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: const TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Status:',
+                          )
+                        ],
+                      ),
+                    ),
+                    Text(widget.anime.status,
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          color: textColor,
+                        )),
+                  ],
                 ),
               ),
 
@@ -125,21 +171,48 @@ class _DetailPageState extends State<DetailPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 15.0, vertical: 10.0),
-                child: Text(
-                  'Start Date: ${widget.anime.startDate}',
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    color: textColor,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: const TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Start Date:',
+                          )
+                        ],
+                      ),
+                    ),
+                    Text(startDate,
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          color: textColor,
+                        )),
+                  ],
                 ),
               ),
               const SizedBox(height: 10.0),
               Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 15.0, vertical: 10.0),
-                child: Text(
-                  'End Date: ${widget.anime.endDate}',
-                  style: const TextStyle(fontSize: 16.0, color: textColor),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: const TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Start Date:',
+                          )
+                        ],
+                      ),
+                    ),
+                    Text(endDate,
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          color: textColor,
+                        )),
+                  ],
                 ),
               ),
 
@@ -177,34 +250,6 @@ class _DetailPageState extends State<DetailPage> {
                       backgroundColor: primaryColor,
                     );
                   }).toList(),
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                child: Text(
-                  'Trailer',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: textColor,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0, vertical: 10.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    Uri url = Uri.parse(widget.anime.url);
-                    if (await canLaunchUrl(url)) {
-                      await launchUrl(url, mode: LaunchMode.inAppBrowserView);
-                    } else {
-                      throw 'Could not launch $url';
-                    }
-                  },
-                  child: const Text('Watch Trailer'),
                 ),
               ),
             ],
