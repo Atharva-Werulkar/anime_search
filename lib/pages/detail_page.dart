@@ -4,10 +4,11 @@ import 'package:anime_search/widgets/custom_image_banner.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+// DetailPage widget displays detailed information about a specific Anime
 class DetailPage extends StatefulWidget {
   final Anime anime;
 
-  const DetailPage({Key? key, required this.anime}) : super(key: key);
+  const DetailPage({super.key, required this.anime});
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -15,41 +16,73 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   bool _showFullSynopsis = false;
+
+  // Helper function to handle null values in Anime details
+  String getAnimeDetail(String detail, String fallback) {
+    return detail == 'null' || detail == 'null-null-null' ? fallback : detail;
+  }
+
+  // Function to build a widget for displaying Anime details
+  Widget buildAnimeDetail(String title, String detail) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          RichText(
+            text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: '$title:',
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
+                  ),
+                )
+              ],
+            ),
+          ),
+          Text(detail,
+              style: const TextStyle(
+                fontSize: 16.0,
+                color: textColor,
+              )),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Splitting the synopsis into paragraphs
     List<String> paragraphs = widget.anime.synopsis.split('\n');
     String firstParagraph = paragraphs.first;
     String restOfSynopsis = paragraphs.skip(1).join('\n');
-    String rating =
-        widget.anime.rating == 'null' ? 'N/A' : widget.anime.rating + '/10';
 
-    String episodes = widget.anime.episodes == 'null'
-        ? 'N/A'
-        : widget.anime.episodes + ' episodes';
-    String startDate = widget.anime.startDate == 'null-null-null'
-        ? 'N/A'
-        : widget.anime.startDate;
-
-    String endDate = widget.anime.endDate == 'null-null-null'
-        ? 'N/A'
-        : widget.anime.startDate;
+    // Preparing Anime details
+    String rating = '${getAnimeDetail(widget.anime.rating, 'N/A')}/10';
+    String episodes =
+        '${getAnimeDetail(widget.anime.episodes, 'N/A')} episodes';
+    String startDate = getAnimeDetail(widget.anime.startDate, 'N/A');
+    String endDate = getAnimeDetail(widget.anime.endDate, 'N/A');
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: primaryColor,
         body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: const PageScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              // Custom Anime Card
+              // Displaying the Anime banner
               ImageBanner(
                 trailerThumbnail: widget.anime.trailerThumbnail,
                 title: widget.anime.title,
                 url: widget.anime.trailerUrl,
               ),
-
+              // Displaying the Anime synopsis
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                 child: Text(
@@ -64,8 +97,7 @@ class _DetailPageState extends State<DetailPage> {
 
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 15.0,
-                ),
+                    horizontal: 15.0, vertical: 10.0),
                 child: RichText(
                   textAlign: TextAlign.justify,
                   text: TextSpan(
@@ -77,7 +109,7 @@ class _DetailPageState extends State<DetailPage> {
                     children: <TextSpan>[
                       TextSpan(text: firstParagraph),
                       if (_showFullSynopsis)
-                        TextSpan(text: '\n' + restOfSynopsis),
+                        TextSpan(text: '\n$restOfSynopsis'),
                       TextSpan(
                         text: _showFullSynopsis ? ' Show Less' : ' Read More',
                         style: const TextStyle(
@@ -95,132 +127,20 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                 ),
               ),
-
-              Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RichText(
-                        text: const TextSpan(
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'Rating:',
-                            )
-                          ],
-                        ),
-                      ),
-                      Text('${rating}',
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                            color: textColor,
-                          )),
-                    ],
-                  )),
+              // Displaying the Anime details
+              buildAnimeDetail('Rating', rating),
               const SizedBox(height: 10.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0, vertical: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: const TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Episodes:',
-                          )
-                        ],
-                      ),
-                    ),
-                    Text(episodes,
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          color: textColor,
-                        )),
-                  ],
-                ),
-              ),
+              buildAnimeDetail('Episodes', episodes),
               const SizedBox(height: 10.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0, vertical: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: const TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Status:',
-                          )
-                        ],
-                      ),
-                    ),
-                    Text(widget.anime.status,
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          color: textColor,
-                        )),
-                  ],
-                ),
-              ),
-
+              buildAnimeDetail('Status', widget.anime.status),
               const SizedBox(height: 10.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0, vertical: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: const TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Start Date:',
-                          )
-                        ],
-                      ),
-                    ),
-                    Text(startDate,
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          color: textColor,
-                        )),
-                  ],
-                ),
-              ),
+              buildAnimeDetail('Start Date', startDate),
               const SizedBox(height: 10.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0, vertical: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: const TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Start Date:',
-                          )
-                        ],
-                      ),
-                    ),
-                    Text(endDate,
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          color: textColor,
-                        )),
-                  ],
-                ),
-              ),
-
+              buildAnimeDetail('End Date', endDate),
               const SizedBox(height: 10.0),
+              // Displaying the Anime genres
               const Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 15.0,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 15.0),
                 child: Text(
                   'Genres',
                   style: TextStyle(
@@ -230,7 +150,7 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                 ),
               ),
-
+              // Displaying the Anime genres as chips
               Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 15.0, vertical: 10.0),

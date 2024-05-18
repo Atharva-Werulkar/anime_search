@@ -1,80 +1,58 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:anime_search/model/anime.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Backend {
-  //search anime
-  static Future<List<Anime>> searchAnime(String name) async {
-    final response =
-        await http.get(Uri.parse('https://api.jikan.moe/v4/anime?q=$name'));
-
-    if (response.statusCode == 200) {
-      List<dynamic> body = jsonDecode(response.body)['data'];
-      // log('fetching data from api:  $body ');
-
-      List<Anime> animeList =
-          body.map((dynamic item) => Anime.fromMap(item)).toList();
-
-      log(' Searched Anime List Fetched');
-
-      return animeList;
-    } else {
-      throw Exception('Failed to load anime');
-    }
+  static Future<void> saveDataToCache(String key, String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(key, value);
+    log('Data saved to cache with key: $key');
   }
 
-  //get top anime
+  static Future<String?> readDataFromCache(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    String? data = prefs.getString(key);
+    if (data != null) {
+      log('Data read from cache with key: $key');
+    } else {
+      log('No data found in cache with key: $key');
+    }
+    return data;
+  }
+
+  static Future<List<Anime>> fetchAnimeData(String key, String url) async {
+    log('Fetching anime data with key: $key');
+    String? data = await readDataFromCache(key);
+    if (data == null) {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        data = response.body;
+        await saveDataToCache(key, data);
+        log('Data fetched from API and saved to cache with key: $key');
+      } else {
+        throw Exception('Failed to load anime');
+      }
+    }
+    List<dynamic> body = jsonDecode(data)['data'];
+    return body.map((dynamic item) => Anime.fromMap(item)).toList();
+  }
+
+  static Future<List<Anime>> searchAnime(String name) async {
+    log('Searching anime with name: $name');
+    return fetchAnimeData(
+        'anime_search_$name', 'https://api.jikan.moe/v4/anime?q=$name');
+  }
 
   static Future<List<Anime>> getTopAnime() async {
-    final response =
-        await http.get(Uri.parse('https://api.jikan.moe/v4/top/anime'));
-
-    if (response.statusCode == 200) {
-      List<dynamic> body = jsonDecode(response.body)['data'];
-      List<Anime> animeList =
-          body.map((dynamic item) => Anime.fromMap(item)).toList();
-      log('Top Anime List Fetched ');
-      return animeList;
-    } else {
-      throw Exception('Failed to load top anime');
-    }
+    log('Fetching top anime');
+    return fetchAnimeData('top_anime', 'https://api.jikan.moe/v4/top/anime');
   }
 
-  //get upcoming anime season
   static Future<List<Anime>> getUpcomingAnime() async {
-    final response =
-        await http.get(Uri.parse('https://api.jikan.moe/v4/seasons/upcoming'));
-
-    if (response.statusCode == 200) {
-      List<dynamic> body = jsonDecode(response.body)['data'];
-      List<Anime> animeList =
-          body.map((dynamic item) => Anime.fromMap(item)).toList();
-      log('Upcoming Anime List Fetched ');
-      return animeList;
-    } else {
-      throw Exception('Failed to load upcoming anime');
-    }
+    log('Fetching upcoming anime');
+    return fetchAnimeData(
+        'upcoming_anime', 'https://api.jikan.moe/v4/seasons/upcoming');
   }
-
-  // //get anime recommendations
-  //
-  // // 'https://api.jikan.moe/v4/anime/1/recommendations'
-  // //     'https://api.jikan.moe/v4/recommendations/anime'
-  // static Future<List<Anime>> getAnimeRecommendations() async {
-  //   final response = await http.get(
-  //       Uri.parse('https://api.jikan.moe/v4/recommendations/anime?page=1'));
-  //   log('Anime Recommendations Response :  $response ');
-  //
-  //   if (response.statusCode == 200) {
-  //     List<dynamic> body = jsonDecode(response.body)['data'];
-  //     List<Anime> animeList =
-  //         body.map((dynamic item) => Anime.fromMap(item)).toList();
-  //     log('Anime Recommendations List :  $animeList ');
-  //     return animeList;
-  //   } else {
-  //     throw Exception('Failed to load anime recommendations');
-  //   }
-  // }
 }

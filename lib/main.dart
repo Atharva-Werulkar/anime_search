@@ -3,6 +3,7 @@ import 'package:anime_search/pages/search_page.dart';
 import 'package:anime_search/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,45 +21,49 @@ void main() {
   ));
 }
 
+// MyApp is the root widget of the application
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Anime Search',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
+        fontFamily: GoogleFonts.raleway().fontFamily,
       ),
       home: const MyHomePage(),
     );
   }
 }
 
+// MyHomePage is the main page of the application
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({
-    super.key,
-  });
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+// _MyHomePageState is the state associated with MyHomePage
 class _MyHomePageState extends State<MyHomePage> {
+  // _pageController controls the page view
   final PageController _pageController = PageController();
+  // _currentIndex keeps track of the current page
   int _currentIndex = 0;
 
   @override
   void dispose() {
+    // Dispose of the page controller when the widget is removed from the widget tree
     _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    //body of the app
+    // The body of the app is a PageView with HomePage and SearchPage
     return Scaffold(
       backgroundColor: primaryColor,
       body: PageView(
@@ -68,13 +73,13 @@ class _MyHomePageState extends State<MyHomePage> {
           SearchPage(),
         ],
         onPageChanged: (index) {
+          // Update _currentIndex when the page changes
           setState(() {
             _currentIndex = index;
           });
         },
       ),
-
-      //bottom navigation bar for anime app
+      // The bottom navigation bar allows the user to switch between HomePage and SearchPage
       bottomNavigationBar: BottomNavigationBar(
         enableFeedback: false,
         items: const <BottomNavigationBarItem>[
@@ -87,10 +92,9 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Search',
           ),
         ],
-        currentIndex: _currentIndex, // Add this line
+        currentIndex: _currentIndex,
         backgroundColor: secondaryColor,
         elevation: 0,
-
         selectedIconTheme:
             const IconThemeData(size: 30, color: primaryIconColor),
         unselectedIconTheme:
@@ -99,6 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         onTap: (index) {
+          // Switch pages when an item is tapped
           _pageController.jumpToPage(index);
           setState(() {
             _currentIndex = index;

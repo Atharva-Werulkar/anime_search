@@ -8,7 +8,6 @@ class Anime {
   final String status;
   final String episodes;
   final String rating;
-
   final List<String> genres;
   final String startDate;
   final String endDate;
@@ -28,21 +27,12 @@ class Anime {
     required this.endDate,
   });
 
-  static String formatDate(Map<String, dynamic> date) {
-    return '${date['day']}-${date['month']}-${date['year']}';
-  }
-
-  // Factory method to create an Anime instance from a Map
   factory Anime.fromMap(Map<String, dynamic> json) {
     return Anime(
       id: json['mal_id'].toString(),
-      title: json['title_english'] != null
-          ? json['title_english'].toString()
-          : json['title'].toString(),
+      title: json['title_english'] ?? json['title'].toString(),
       url: json['url'].toString(),
-      trailerUrl: json['trailer']['url'] != null
-          ? json['trailer']['url'].toString()
-          : null,
+      trailerUrl: json['trailer']['url']?.toString(),
       trailerThumbnail: json['images']['jpg']['image_url'].toString(),
       synopsis: json['synopsis'].toString(),
       status: json['status'].toString(),
@@ -50,8 +40,10 @@ class Anime {
       rating: json['score'].toString(),
       genres: List<String>.from(
           json['genres'].map((genre) => genre['name'].toString())),
-      startDate: formatDate(json['aired']['prop']['from']),
-      endDate: formatDate(json['aired']['prop']['to']),
+      startDate:
+          '${json['aired']['prop']['from']['day']}-${json['aired']['prop']['from']['month']}-${json['aired']['prop']['from']['year']}',
+      endDate:
+          '${json['aired']['prop']['to']['day']}-${json['aired']['prop']['to']['month']}-${json['aired']['prop']['to']['year']}',
     );
   }
 }

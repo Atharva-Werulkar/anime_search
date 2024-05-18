@@ -1,5 +1,6 @@
 import 'package:anime_search/backend/backend.dart';
 import 'package:anime_search/model/anime.dart';
+import 'package:anime_search/pages/detail_page.dart';
 import 'package:anime_search/utils/colors.dart';
 import 'package:anime_search/utils/constants.dart';
 import 'package:anime_search/widgets/custom_carousel_slider.dart';
@@ -7,7 +8,6 @@ import 'package:anime_search/widgets/custom_homepage_card.dart';
 import 'package:anime_search/widgets/custom_shimmer_card.dart';
 import 'package:anime_search/widgets/custom_shimmer_carousel.dart';
 import 'package:flutter/material.dart';
-import 'package:anime_search/pages/detail_page.dart'; // Import the DetailPage
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,6 +25,45 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _topAnime = Backend.getTopAnime();
     _upcomingAnime = Backend.getUpcomingAnime();
+  }
+
+  Widget buildAnimeList(
+      Future<List<Anime>>? animeList, Widget Function(Anime) buildItem) {
+    return FutureBuilder<List<Anime>>(
+      future: animeList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) => GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          DetailPage(anime: snapshot.data![index]),
+                    ),
+                  );
+                },
+                child: buildItem(snapshot.data![index])),
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+        // By default, show a shimmer loader.
+        return ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          itemCount: 10,
+          itemBuilder: (context, index) => const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child: ShimmerCard(),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -68,6 +107,7 @@ class _HomePageState extends State<HomePage> {
                   return const ShimmerCarousel();
                 },
               ),
+
               //=====Popular anime =====//
               const SizedBox(height: 10.0),
               const Padding(
@@ -84,63 +124,20 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 10.0),
 
               //list of popular anime
-              FutureBuilder<List<Anime>>(
-                future: _topAnime,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return SizedBox(
-                      height: getDeviceHeight(context) * 0.3,
-                      child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      DetailPage(anime: snapshot.data![index]),
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: HomePageCard(
-                                trailerUrl: snapshot.data![index].trailerUrl ??
-                                    'Not Available',
-                                title: snapshot.data![index].title,
-                                thumbnailUrl:
-                                    snapshot.data![index].trailerThumbnail,
-                                url: snapshot.data![index].url,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  }
-
-                  // By default, show a shimmer loader.
-                  return SizedBox(
-                    height: getDeviceHeight(context) * 0.3,
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.0),
-                          child: ShimmerCard(),
-                        );
-                      },
+              SizedBox(
+                height: getDeviceHeight(context) * 0.3,
+                child: buildAnimeList(
+                  _topAnime,
+                  (anime) => Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: HomePageCard(
+                      trailerUrl: anime.trailerUrl ?? 'Not Available',
+                      title: anime.title,
+                      thumbnailUrl: anime.trailerThumbnail,
+                      url: anime.url,
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
 
               //=====Top Upcoming anime =====//
@@ -158,64 +155,21 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 10.0),
 
-              //list of upcoming anime
-              FutureBuilder<List<Anime>>(
-                future: _upcomingAnime,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return SizedBox(
-                      height: getDeviceHeight(context) * 0.3,
-                      child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      DetailPage(anime: snapshot.data![index]),
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: HomePageCard(
-                                trailerUrl: snapshot.data![index].trailerUrl ??
-                                    'Not Available',
-                                title: snapshot.data![index].title,
-                                thumbnailUrl:
-                                    snapshot.data![index].trailerThumbnail,
-                                url: snapshot.data![index].url,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  }
-
-                  // By default, show a shimmer loader.
-                  return SizedBox(
-                    height: getDeviceHeight(context) * 0.3,
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.0),
-                          child: ShimmerCard(),
-                        );
-                      },
+              //====List of upcoming anime =====//
+              SizedBox(
+                height: getDeviceHeight(context) * 0.3,
+                child: buildAnimeList(
+                  _upcomingAnime,
+                  (anime) => Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: HomePageCard(
+                      trailerUrl: anime.trailerUrl ?? 'Not Available',
+                      title: anime.title,
+                      thumbnailUrl: anime.trailerThumbnail,
+                      url: anime.url,
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
             ],
           ),
