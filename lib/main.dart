@@ -4,6 +4,7 @@ import 'package:anime_search/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 
 void main() {
   runApp(const MyApp());
@@ -84,11 +85,11 @@ class _MyHomePageState extends State<MyHomePage> {
         enableFeedback: false,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Iconsax.home_2, size: 25),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Iconsax.search_normal4, size: 25),
             label: 'Search',
           ),
         ],

@@ -6,6 +6,7 @@ import 'package:anime_search/utils/colors.dart';
 import 'package:anime_search/widgets/custom_anime_card.dart';
 import 'package:anime_search/widgets/custom_shimmer_card.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
 // This is the main SearchPage widget.
 class SearchPage extends StatefulWidget {
@@ -91,7 +92,8 @@ class SearchPageState extends State<SearchPage> {
         decoration: const InputDecoration(
           hintText: 'Search Anime',
           hintStyle: TextStyle(color: Colors.grey),
-          prefixIcon: Icon(Icons.search, color: Colors.grey),
+          prefixIcon:
+              Icon(Iconsax.search_normal4, size: 25, color: Colors.grey),
           border: InputBorder.none,
         ),
       ),
