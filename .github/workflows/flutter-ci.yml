@@ -28,7 +28,7 @@ jobs:
     
     # Get flutter dependencies.
     - run: flutter pub get
-    
+
     # Build apk.
     - run: flutter build apk
     
@@ -37,7 +37,7 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PAT }}
       with:
         tag_name: 'v1.0.0'  # You can use a dynamic version if needed
         release_name: 'Release v1.0.0'
@@ -48,7 +48,7 @@ jobs:
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: build/app/outputs/apk/release/app-release.apk
